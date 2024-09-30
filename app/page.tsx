@@ -8,10 +8,12 @@ export default function Home() {
   const [connection, setConnection] = useState(socket.connected)
 
   function onConnect() {
+    console.log(`Connection: ${connection.valueOf()}`)
     setConnection(true);
   }
 
   function onDisconnect() {
+    console.log(`Connection: ${connection.valueOf()}`)
     setConnection(false);
   }
 
