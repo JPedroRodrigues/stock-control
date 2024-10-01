@@ -1,19 +1,8 @@
-import { Button } from "../components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "../components/ui/input";
 import { DataTable } from "./DataTable";
+import { CreateProduct } from "@/app/products/CreateProduct";
+import { FilterProducts } from "@/app/products/FilterProducts";
 import { Product, columns } from "@/app/products/columns";
-import { Search, PlusCircle } from "lucide-react";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogDescription,
-  DialogTitle,
-  DialogFooter,
-  DialogClose
-} from "../components/ui/dialog"
+
 
 export const data: Product[] = [
     {
@@ -54,55 +43,9 @@ export default function Main() {
             <h1 className="text-3xl font-bold">Estoque</h1>
 
             <div className="flex items-center justify-between">
+                <FilterProducts />
 
-                <form className="flex items-center gap-2">
-                <Input name="id" placeholder="Id do pedido" className="w-auto"></Input>
-                <Input name="id" placeholder="Nome do produto" className="w-auto"></Input>
-                <Button type="submit" variant="secondary">
-                    <Search className="w-4 h-4 mr-2"/>
-                    Filtrar resultados
-                </Button>
-                </form>
-
-                <Dialog>
-                <DialogTrigger asChild>
-                    <Button className="flex items-center">
-                        <PlusCircle className="w-4 h-4 mr-2"/>
-                        Novo Produto
-                    </Button>
-                </DialogTrigger>
-                <DialogContent>
-                    <DialogHeader>
-                    <DialogTitle>Novo Produto</DialogTitle>
-                    <DialogDescription>Adicionar informações do produto</DialogDescription>
-                    </DialogHeader>
-
-                    <form action="" className="space-y-6">
-                        <div className="grid grid-cols-4 items-center text-right gap-3">
-                            <Label htmlFor="name">Produto</Label>
-                            <Input className="col-span-3" placeholder="Nome do produto" id="name"/>
-                        </div>
-
-                        <div className="grid grid-cols-4 items-center text-right gap-3">
-                            <Label htmlFor="quantity">Quantidade</Label>
-                            <Input className="col-span-3" type="number" placeholder="Quantidade em estoque" id="quantity"/>
-                        </div>
-
-                        <div className="grid grid-cols-4 items-center text-right gap-3">
-                            <Label htmlFor="price">Preço</Label>
-                            <Input className="col-span-3" type="number" placeholder="Preço" id="price"/>
-                        </div>
-
-                        <DialogFooter>
-                            <DialogClose asChild>
-                            <Button type="button" variant={"outline"}>Cancelar</Button>
-                            </DialogClose>
-                            <Button type="submit">Salvar</Button>
-                        </DialogFooter>
-                    </form>
-                </DialogContent>
-                </Dialog>
-                
+                <CreateProduct />
             </div>
 
             <DataTable columns={columns} data={data} />
