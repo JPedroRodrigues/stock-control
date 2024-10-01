@@ -1,5 +1,3 @@
-"use client"
-
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -32,6 +30,9 @@ export function CreateProduct() {
     });
 
     async function handleCreateProduct(data: CreateProductSchema) {
+        console.table(data);
+        console.log(typeof data);
+
         try {
             const response = await fetch("/api/products", {
                 method: "POST",
@@ -51,7 +52,6 @@ export function CreateProduct() {
         } catch (error) {
             console.log(`Error while creating product ${data.name}: ${error}`);
         }
-        console.log(data);
     }
 
     return (
