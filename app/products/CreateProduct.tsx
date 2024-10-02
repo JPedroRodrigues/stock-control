@@ -1,10 +1,12 @@
 import { z } from "zod";
+import { v4 as uuidv4 } from 'uuid';
+import { socket } from "@/lib/socket";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
+import { PlusCircle } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { PlusCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Dialog,
   DialogTrigger,
@@ -32,14 +34,14 @@ export function CreateProduct() {
     async function handleCreateProduct(data: CreateProductSchema) {
         console.table(data);
         console.log(typeof data);
-
+        const product = {_id: uuidv4(), ...data};
         try {
             const response = await fetch("/api/products", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(data),
+                body: JSON.stringify(product),
             });
 
             if (!response.ok) {
@@ -47,10 +49,11 @@ export function CreateProduct() {
             }
 
             const result = await response.json();
-            console.log(`Product added: ${JSON.stringify(result)}`)
+            console.log(`New product added: ${JSON.stringify(result)}`)
 
+            socket.emit("post-product");
         } catch (error) {
-            console.log(`Error while creating product ${data.name}: ${error}`);
+            console.log(`Error while creating product ${product.name}: ${error}`);
         }
     }
 
@@ -81,14 +84,16 @@ export function CreateProduct() {
 
                     <div className="grid grid-cols-4 items-center text-right gap-3">
                         <Label htmlFor="price">Preço</Label>
-                        <Input className="col-span-3" type="number" placeholder="Preço" id="price" {...register("price")}/>
+                        <Input className="col-span-3" type="number" step={"0.01"} placeholder="Preço" id="price" {...register("price")}/>
                     </div>
 
                     <DialogFooter>
                         <DialogClose asChild>
-                        <Button type="button" variant={"outline"}>Cancelar</Button>
+                            <Button type="button" variant={"outline"}>Cancelar</Button>
                         </DialogClose>
-                        <Button type="submit">Salvar</Button>
+                        <DialogClose>
+                            <Button type="submit">Salvar</Button>
+                        </DialogClose>
                     </DialogFooter>
                 </form>
             </DialogContent>

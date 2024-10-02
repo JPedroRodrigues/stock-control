@@ -17,6 +17,14 @@ app.prepare().then(() => {
   io.on("connection", (socket) => {
     console.log(`A client with id "${socket.id}" has connected`);
 
+    // socket.on("get-products", () => {
+    //     io.emit("update-products-interface");
+    // });
+
+    socket.on("post-product", () => {
+        io.emit("update-products-interface");
+    });
+
     socket.on("disconnect", (cause) => {
         console.log(`Client with Id "${socket.id} has disconnected due to: ${cause}."`);
     });

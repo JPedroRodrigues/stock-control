@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog"
 
 export type Product = {
-    id: UUID
+    _id: UUID
     name: string
     quantity: number
     price: number
@@ -24,10 +24,10 @@ export type Product = {
 
 export const columns: ColumnDef<Product>[] = [
     {
-        accessorKey: "id",
+        accessorKey: "_id",
         header: () => <div className="text-left">ID</div>,
         cell: ({ row }) => {     
-          return <div className="text-left font-medium">{row.getValue("id")}</div>
+          return <div className="text-left font-medium">{row.getValue("_id")}</div>
         },
     },
     {
