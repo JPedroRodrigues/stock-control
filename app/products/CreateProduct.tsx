@@ -32,8 +32,6 @@ export function CreateProduct() {
     });
 
     async function handleCreateProduct(data: CreateProductSchema) {
-        console.table(data);
-        console.log(typeof data);
         const product = {_id: uuidv4(), ...data};
         try {
             const response = await fetch("/api/products", {

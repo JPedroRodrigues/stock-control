@@ -1,6 +1,10 @@
-import { createServer } from "http";
 import next from "next";
+import * as dotenv from 'dotenv';
 import { Server } from "socket.io";
+import { createServer } from "http";
+import { v4 as uuidv4 } from 'uuid';
+
+dotenv.config();
 
 const dev = process.env.NODE_ENV !== "production";
 const hostname = "localhost";
@@ -9,7 +13,7 @@ const port = 3000;
 const app = next({ dev, hostname, port });
 const handler = app.getRequestHandler();
 
-app.prepare().then(() => {
+app.prepare().then(async () => {
   const httpServer = createServer(handler);
 
   const io = new Server(httpServer);
@@ -21,8 +25,31 @@ app.prepare().then(() => {
     //     io.emit("update-products-interface");
     // });
 
-    socket.on("post-product", () => {
-        io.emit("update-products-interface");
+    socket.on("post-product", async () => {
+        // const product = {_id: uuidv4(), ...data};
+        // try {
+        //     const products_api = process.env.PRODUCTS_API;
+        //     console.log(products_api);
+
+        //     const response = await fetch(`${products_api}/api/products`, {
+        //         method: "POST",
+        //         headers: {
+        //             "Content-Type": "application/json",
+        //         },
+        //         body: JSON.stringify(product),
+        //     });
+
+        //     if (!response.ok) {
+        //         throw new Error("Failed to add a new product");
+        //     }
+
+        //     const result = await response.json();
+        //     console.log(`New product added: ${JSON.stringify(result)}`);
+
+            io.emit("update-products-interface");
+        // } catch (error) {
+        //     console.log(`Error while creating product ${product.name}: ${error}`);
+        // }
     });
 
     socket.on("disconnect", (cause) => {
