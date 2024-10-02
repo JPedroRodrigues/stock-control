@@ -1,6 +1,6 @@
 "use client"
 
-import { useState} from "react";
+import { useState, useEffect } from "react";
 import { socket } from "@/lib/socket";
 import { DataTable } from "@/components/DataTable";
 import { Product, columns } from "@/app/products/columns";
@@ -44,30 +44,66 @@ export default function Home() {
   const [connection, setConnection] = useState(socket.connected);
   const [products, setProducts] = useState(data);
 
-  function onConnect() {
-    if (!connection) {
-      // socket.emit("get-products");
+  // function onConnect() {
+  //   if (!connection) {
+  //     // socket.emit("get-products");
+  //     setConnection(true);
+  //   }
+  // }
+
+  // function onDisconnect() {
+  //   if (connection) setConnection(false);
+  // }
+
+  // socket.on("connect", onConnect);
+  // socket.on("disconnect", onDisconnect);
+
+  // socket.on("update-products-interface", async () => {
+  //     const response = await fetch("/api/products/all");
+
+  //     if (!response.ok) {
+  //         throw new Error("Failed to add a new product");
+  //     }
+
+  //     const result = await response.json();
+  //     setProducts(result.products);
+  // });
+
+  useEffect(() => {
+    function onConnect() {
       setConnection(true);
+
+      socket.emit("get-products");
     }
-  }
 
-  function onDisconnect() {
-    if (connection) setConnection(false);
-  }
+    function onDisconnect() {
+      setConnection(false);
+    }
 
-  socket.on("connect", onConnect);
-  socket.on("disconnect", onDisconnect);
+    // Add event listeners for connect and disconnect events
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
 
-  socket.on("update-products-interface", async () => {
-      const response = await fetch("/api/products/all");
-
-      if (!response.ok) {
-          throw new Error("Failed to add a new product");
+    // Add event listener for custom event
+    socket.on("update-products-interface", async () => {
+      try {
+        const response = await fetch("/api/products/all");
+        if (!response.ok) {
+          throw new Error("Failed to fetch products");
+        }
+        const result = await response.json();
+        setProducts(result.products);
+      } catch (error) {
+        console.error(error);
       }
+    });
 
-      const result = await response.json();
-      setProducts(result.products);
-  });
+    return () => {
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+      socket.off("update-products-interface");
+    };
+  }, [connection]);
 
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-4">

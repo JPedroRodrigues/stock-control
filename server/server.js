@@ -25,31 +25,30 @@ app.prepare().then(async () => {
     //     io.emit("update-products-interface");
     // });
 
-    socket.on("post-product", async () => {
-        // const product = {_id: uuidv4(), ...data};
-        // try {
-        //     const products_api = process.env.PRODUCTS_API;
-        //     console.log(products_api);
+    socket.on("post-product", async (data) => {
+        const product = {_id: uuidv4(), ...data};
+        try {
+            const products_api = process.env.PRODUCTS_API;
 
-        //     const response = await fetch(`${products_api}/api/products`, {
-        //         method: "POST",
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //         },
-        //         body: JSON.stringify(product),
-        //     });
+            const response = await fetch(`${products_api}/api/products`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(product),
+            });
 
-        //     if (!response.ok) {
-        //         throw new Error("Failed to add a new product");
-        //     }
+            if (!response.ok) {
+                throw new Error("Failed to add a new product");
+            }
 
-        //     const result = await response.json();
-        //     console.log(`New product added: ${JSON.stringify(result)}`);
+            const result = await response.json();
+            console.log(`New product added: ${JSON.stringify(result)}`);
 
             io.emit("update-products-interface");
-        // } catch (error) {
-        //     console.log(`Error while creating product ${product.name}: ${error}`);
-        // }
+        } catch (error) {
+            console.log(`Error while creating product ${product.name}: ${error}`);
+        }
     });
 
     socket.on("disconnect", (cause) => {
