@@ -25,6 +25,9 @@ app.prepare().then(async () => {
     socket.on("get-products", async () => {
         const response = await fetch(`${products_api}/api/products/all`, {
           method: 'GET',
+          headers: {
+            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+          },
           cache: 'no-store', // Disable caching
         });
         
@@ -43,6 +46,8 @@ app.prepare().then(async () => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+
                 },
                 body: JSON.stringify(product),
                 cache: "no-store"

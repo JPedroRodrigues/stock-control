@@ -1,5 +1,3 @@
-"use client"
-
 import {
   ColumnDef,
   flexRender,
@@ -15,6 +13,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+
+export const dynamic = 'force-dynamic';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState} from "react";
+import { useState } from "react";
 import { socket } from "@/lib/socket";
 import { DataTable } from "@/components/DataTable";
 import { columns } from "@/app/products/columns";
@@ -40,6 +40,8 @@ import { FilterProducts } from "@/app/products/FilterProducts";
 //     },
 // ]
 
+export const dynamic = 'force-dynamic';
+
 export default function Home() {
   const [connection, setConnection] = useState(socket.connected);
   const [products, setProducts] = useState([]);
@@ -65,7 +67,10 @@ export default function Home() {
   socket.on("update-products-interface", async () => {
       const response = await fetch("/api/products/all", {
         method: 'GET',
-        cache: 'no-store', // Disable caching
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        },
+        cache: 'no-store',
       });
 
       if (!response.ok) {
