@@ -32,27 +32,7 @@ export function CreateProduct() {
     });
 
     async function handleCreateProduct(data: CreateProductSchema) {
-        // const product = {_id: uuidv4(), ...data};
-        // try {
-        //     const response = await fetch("/api/products", {
-        //         method: "POST",
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //         },
-        //         body: JSON.stringify(product),
-        //     });
-
-        //     if (!response.ok) {
-        //         throw new Error("Failed to add a new product");
-        //     }
-
-        //     const result = await response.json();
-        //     console.log(`New product added: ${JSON.stringify(result)}`)
-
             socket.emit("post-product", data);
-        // } catch (error) {
-        //     console.log(`Error while creating product ${product.name}: ${error}`);
-        // }
     }
 
     return (

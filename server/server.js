@@ -20,22 +20,32 @@ app.prepare().then(async () => {
 
   io.on("connection", (socket) => {
     console.log(`A client with id "${socket.id}" has connected`);
+    const products_api = process.env.PRODUCTS_API;
 
-    // socket.on("get-products", () => {
-    //     io.emit("update-products-interface");
-    // });
+    socket.on("get-products", async () => {
+        const response = await fetch(`${products_api}/api/products/all`, {
+          method: 'GET',
+          cache: 'no-store', // Disable caching
+        });
+        
+        if (!response.ok) {
+          throw new Error("Failed to fetch products");
+        }
+
+        const result = await response.json();
+        socket.emit("products-data", result.products);
+    });
 
     socket.on("post-product", async (data) => {
         const product = {_id: uuidv4(), ...data};
         try {
-            const products_api = process.env.PRODUCTS_API;
-
             const response = await fetch(`${products_api}/api/products`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(product),
+                cache: "no-store"
             });
 
             if (!response.ok) {
