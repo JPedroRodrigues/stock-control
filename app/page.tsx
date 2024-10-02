@@ -7,7 +7,7 @@ import { Product, columns } from "@/app/products/columns";
 import { CreateProduct } from "@/app/products/CreateProduct";
 import { FilterProducts } from "@/app/products/FilterProducts";
 
-export const data: Product[] = [
+const data: Product[] = [
     {
         _id: "ce32cc24-8eba-42b0-a71f-b97accb8a817",
         name: "🥬 Alface",
