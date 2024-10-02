@@ -1,9 +1,10 @@
 "use client"
 
+import { socket } from "@/lib/socket";
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table"
 import { UUID } from "crypto";
-import { Trash2 } from "lucide-react";
+import { DeleteItem } from "@/components/DeleteItem";
 import {
     Dialog,
     DialogTrigger,
@@ -13,7 +14,7 @@ import {
     DialogTitle,
     DialogFooter,
     DialogClose
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 
 export type Product = {
     _id: UUID
@@ -59,16 +60,24 @@ export const columns: ColumnDef<Product>[] = [
     },
     {
         id: "actions",
-        cell: () => {
+        cell: ({ row }) => {
+            function onDeleteProduct() {
+                const productId = row.getValue("_id");
+
+                socket.emit("delete-product", productId);
+            }
+
             return (
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Trash2 className="h-5" color = {"#545454"}></Trash2>
+                        <Button type="button" variant={"ghost"}>
+                            <DeleteItem />
+                        </Button>
                     </DialogTrigger>
 
                     <DialogContent>
                         <DialogHeader>
-                            <DialogTitle>Tem certeza que deseja excluir esse produto?</DialogTitle>
+                            <DialogTitle >Tem certeza que deseja excluir esse produto?</DialogTitle>
                             <DialogDescription>Os dados, uma vez excluídos, não serão recuperados</DialogDescription>
                         </DialogHeader>
 
@@ -76,7 +85,9 @@ export const columns: ColumnDef<Product>[] = [
                             <DialogClose asChild>
                                 <Button type="button">Não</Button>
                             </DialogClose>
-                            <Button type="submit" variant={"secondary"}>Sim</Button>
+                            <DialogClose asChild>
+                                <Button type="button" variant={"secondary"} onClick={onDeleteProduct}>Sim</Button>
+                            </DialogClose>
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>

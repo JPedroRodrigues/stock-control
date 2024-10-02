@@ -87,7 +87,6 @@ export default function Home() {
 
         <div className="flex items-center justify-between">
             <FilterProducts />
-
             <CreateProduct />
         </div>
 

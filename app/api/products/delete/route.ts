@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export const dynamic = 'force-dynamic';
 
-export async function POST(req: Request) {
+export async function DELETE(req: Request) {
     try {
         const collection = await connectToDatabase();
 
@@ -13,14 +13,14 @@ export async function POST(req: Request) {
             }, { status: 500 });
         }
 
-        const product = await req.json();
-        console.log(product);
-        const result = await collection.insertOne(product);
+        const productId = await req.json();
+        console.log(productId);
+        const result = await collection.deleteOne({ _id: productId });
 
         return NextResponse.json({
-            message: `Product ${product.name} added with success`,
-            producId: result.insertedId
-        }, { status: 201 });
+            message: `Product with id "${productId}" deleted with success`,
+            acknowledged: result.acknowledged
+        }, { status: 202 });
     } catch (excp) {
         return NextResponse.json({
             message: "Error while adding a new product",

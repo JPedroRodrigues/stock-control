@@ -47,7 +47,6 @@ app.prepare().then(async () => {
                 headers: {
                     "Content-Type": "application/json",
                     'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-
                 },
                 body: JSON.stringify(product),
                 cache: "no-store"
@@ -63,6 +62,30 @@ app.prepare().then(async () => {
             io.emit("update-products-interface");
         } catch (error) {
             console.log(`Error while creating product ${product.name}: ${error}`);
+        }
+    });
+
+    socket.on("delete-product", async (productId) => {
+        try {
+            const response = await fetch(`${products_api}/api/products/delete`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "text/plain",
+                    'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+                },
+                body: JSON.stringify(productId),
+                cache: "no-store"
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to delete a product");
+            }
+
+            console.log(`Product "${JSON.stringify(productId)}" deleted with success`);
+
+            io.emit("update-products-interface");
+        } catch (error) {
+            console.log(`Error while deleting product with id "${productId}": ${error}`);
         }
     });
 
