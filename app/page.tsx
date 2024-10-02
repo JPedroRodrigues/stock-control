@@ -3,7 +3,7 @@
 import { useState} from "react";
 import { socket } from "@/lib/socket";
 import { DataTable } from "@/components/DataTable";
-import { Product, columns } from "@/app/products/columns";
+import { columns } from "@/app/products/columns";
 import { CreateProduct } from "@/app/products/CreateProduct";
 import { FilterProducts } from "@/app/products/FilterProducts";
 
